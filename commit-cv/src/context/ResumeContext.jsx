@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from "react";
 export const ResumeContext = createContext();
 
 export const ResumeProvider = ({ children }) => {
-  // Persistence: Load from LocalStorage or use default [cite: 153]
+  // Persistence: Load from LocalStorage or use default
   const [resumeData, setResumeData] = useState(() => {
     const saved = localStorage.getItem("commitcv_data");
     return saved
