@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { ResumeContext } from "./ResumeContext";
+import { ResumeContext } from "../context/ResumeContext";
 
 export default function Editor() {
   const { resumeData, setResumeData } = useContext(ResumeContext);

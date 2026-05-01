@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { ResumeProvider } from "./ResumeContext";
-import Builder from "./Builder";
+import { ResumeProvider } from "./context/ResumeContext";
+import Builder from "./builder/Builder";
 
 function Home() {
   return (

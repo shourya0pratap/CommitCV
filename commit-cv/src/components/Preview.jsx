@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ResumeContext } from "./ResumeContext";
+import { ResumeContext } from "../context/ResumeContext";
 import { motion } from "framer-motion";
 
 export default function Preview() {
