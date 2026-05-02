@@ -1,14 +1,34 @@
 @import "tailwindcss";
 
 @page {
+  size: A4;
   margin: 0;
-  size: letter;
 }
 
+@variant dark (&:where(.dark, .dark *));
+
+
 @media print {
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
   body {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     background-color: white !important;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    height: auto !important;
+    margin: 0;
+    padding: 0;
+    overflow: visible !important;
   }
 }
