@@ -44,8 +44,7 @@ function Home() {
         </div>
 
         <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
-          The fully accessible, open-source resume builder. No ads. No paywalls.
-          Just clean code and perfect PDFs.
+          No paywalls. No data selling. No login required.
         </p>
 
         <Link
