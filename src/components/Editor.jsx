@@ -38,11 +38,9 @@ export default function Editor() {
     setResumeData((prev) => ({ ...prev, skills: newOrder }));
   const addSkill = (e) => {
     e.preventDefault();
-    if (!newSkill.trim()) return;
-    setResumeData((prev) => ({
-      ...prev,
-      skills: [...prev.skills, newSkill.trim()],
-    }));
+    const trimmed = newSkill.trim();
+    if (!trimmed || resumeData.skills.includes(trimmed)) return; // Prevents duplicate keys crashing the drag
+    setResumeData((prev) => ({ ...prev, skills: [...prev.skills, trimmed] }));
     setNewSkill("");
   };
   const removeSkill = (skillToRemove) => {
@@ -278,22 +276,22 @@ export default function Editor() {
           axis="y"
           values={resumeData.skills}
           onReorder={handleReorder}
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"
+          className="flex flex-col gap-2" /* FIX: Changed from grid to flex-col */
         >
           {resumeData.skills.map((skill) => (
             <Reorder.Item
               key={skill}
               value={skill}
-              className="flex justify-between items-center p-3 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-xl cursor-grab active:cursor-grabbing hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
+              className="flex justify-between items-center p-3 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-xl cursor-grab active:cursor-grabbing hover:border-slate-300 dark:hover:border-slate-600 transition-colors shadow-sm"
             >
-              <span className="text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-2 text-sm">
-                <GripVertical size={14} className="text-slate-400" /> {skill}
+              <span className="text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-3 text-sm">
+                <GripVertical size={16} className="text-slate-400" /> {skill}
               </span>
               <button
                 onClick={() => removeSkill(skill)}
                 className="text-slate-400 hover:text-red-500 transition-colors"
               >
-                <X size={16} />
+                <X size={18} />
               </button>
             </Reorder.Item>
           ))}
