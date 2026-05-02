@@ -28,6 +28,15 @@ const defaultData = {
         "Built responsive UI components and improved site accessibility.",
     },
   ],
+  projects: [
+    {
+      id: 1,
+      name: "CommitCV",
+      tech: "React, Tailwind, Framer Motion",
+      details:
+        "Developed a fully accessible, free-forever resume builder. Implemented live preview, drag-and-drop section reordering, and native PDF export.",
+    },
+  ],
 };
 
 export const ResumeProvider = ({ children }) => {
@@ -64,8 +73,7 @@ export const ResumeProvider = ({ children }) => {
     const savedOrder = localStorage.getItem("commitcv-order");
     let order = savedOrder
       ? JSON.parse(savedOrder)
-      : ["skills", "educations", "experiences"];
-    // Migrate order strings
+      : ["skills", "educations", "experiences", "projects"];
     return order.map((item) =>
       item === "experience"
         ? "experiences"

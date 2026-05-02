@@ -9,6 +9,7 @@ import {
   Plus,
   X,
   GripVertical,
+  Code,
 } from "lucide-react";
 
 const GithubIcon = ({ size = 24 }) => (
@@ -322,20 +323,100 @@ export default function Editor() {
           </button>
         </div>
 
+        {/* Projects */}
+        <div className={bentoCard}>
+          <div className="flex justify-between items-center mb-5">
+            <h3 className={sectionTitle} style={{ marginBottom: 0 }}>
+              <Code size={20} className="text-slate-400 dark:text-slate-500" />{" "}
+              Projects
+            </h3>
+            <button
+              onClick={() =>
+                addArrayItem("projects", { name: "", tech: "", details: "" })
+              }
+              className="text-sm flex items-center gap-1 bg-[#F7F7F9] dark:bg-black/40 text-slate-900 dark:text-white px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors font-bold border border-gray-100 dark:border-slate-800"
+            >
+              <Plus size={16} /> Add Project
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {resumeData.projects?.map((proj, index) => (
+              <div
+                key={proj.id}
+                className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
+              >
+                <button
+                  onClick={() => removeArrayItem("projects", proj.id)}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+
+                <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-wider">
+                  Project {index + 1}
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                  <input
+                    className={`${inputStyles} !mb-0`}
+                    value={proj.name}
+                    onChange={(e) =>
+                      updateArrayItem(
+                        "projects",
+                        proj.id,
+                        "name",
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Project Name (e.g., CommitCV)"
+                  />
+                  <input
+                    className={`${inputStyles} !mb-0`}
+                    value={proj.tech}
+                    onChange={(e) =>
+                      updateArrayItem(
+                        "projects",
+                        proj.id,
+                        "tech",
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Tech Stack (e.g., React, Node)"
+                  />
+                </div>
+                <textarea
+                  className={inputStyles}
+                  value={proj.details}
+                  onChange={(e) =>
+                    updateArrayItem(
+                      "projects",
+                      proj.id,
+                      "details",
+                      e.target.value,
+                    )
+                  }
+                  placeholder="Describe the project and your role..."
+                  rows="3"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Experiences */}
         <div className="space-y-4">
           {resumeData.experiences.map((exp, index) => (
             <div
               key={exp.id}
               className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
             >
-              {resumeData.experiences.length > 1 && (
-                <button
-                  onClick={() => removeArrayItem("experiences", exp.id)}
-                  className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
-                >
-                  <X size={20} />
-                </button>
-              )}
+              <button
+                onClick={() => removeArrayItem("experiences", exp.id)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+              >
+                <X size={20} />
+              </button>
+
               <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-wider">
                 Role {index + 1}
               </h4>

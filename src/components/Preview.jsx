@@ -59,28 +59,58 @@ const Preview = React.memo(() => {
         </div>
       </div>
     ),
-    experiences: (
-      <div key="experiences" className="mb-6">
-        <h2 className="text-[13px] font-bold uppercase tracking-widest mb-3 text-slate-400 border-b border-slate-200 pb-2">
-          Experience
-        </h2>
-        <div className="space-y-5">
-          {resumeData.experiences.map((exp) => (
-            <div key={exp.id} className="break-inside-avoid">
-              <h3 className="font-bold text-[15px] text-slate-900">
-                {exp.role}{" "}
-                <span className="text-slate-500 font-medium">
-                  at {exp.company}
-                </span>
-              </h3>
-              <p className="text-slate-700 mt-1.5 text-[14px] leading-relaxed whitespace-pre-wrap">
-                {exp.details}
-              </p>
-            </div>
-          ))}
+
+    experiences:
+      resumeData.experiences.length > 0 ? (
+        <div key="experiences" className="mb-6">
+          <h2 className="text-[13px] font-bold uppercase tracking-widest mb-3 text-slate-400 border-b border-slate-200 pb-2">
+            Experience
+          </h2>
+          <div className="space-y-5">
+            {resumeData.experiences.map((exp) => (
+              <div key={exp.id} className="break-inside-avoid">
+                <h3 className="font-bold text-[15px] text-slate-900">
+                  {exp.role}{" "}
+                  <span className="text-slate-500 font-medium">
+                    at {exp.company}
+                  </span>
+                </h3>
+                <p className="text-slate-700 mt-1.5 text-[14px] leading-relaxed whitespace-pre-wrap">
+                  {exp.details}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    ),
+      ) : null,
+
+    projects:
+      resumeData.projects && resumeData.projects.length > 0 ? (
+        <div key="projects" className="mb-6">
+          <h2 className="text-[13px] font-bold uppercase tracking-widest mb-3 text-slate-400 border-b border-slate-200 pb-2">
+            Projects
+          </h2>
+          <div className="space-y-5">
+            {resumeData.projects.map((proj) => (
+              <div key={proj.id} className="break-inside-avoid">
+                <div className="flex justify-between items-start mb-1">
+                  <h3 className="font-bold text-[15px] text-slate-900">
+                    {proj.name}
+                  </h3>
+                  {proj.tech && (
+                    <span className="text-slate-600 text-[13px] font-medium ml-4 text-right">
+                      {proj.tech}
+                    </span>
+                  )}
+                </div>
+                <p className="text-slate-700 mt-1.5 text-[14px] leading-relaxed whitespace-pre-wrap">
+                  {proj.details}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null,
   };
 
   return (
@@ -92,7 +122,7 @@ const Preview = React.memo(() => {
         <Printer size={20} /> Export to PDF
       </button>
 
-      {/* Note: The Preview canvas deliberately forces light mode colors so the PDF printout is correct */}
+      {/* The Preview canvas deliberately forces light mode colors so the PDF printout is correct */}
       <motion.div
         layout
         className="w-[210mm] min-w-[210mm] min-h-[297mm] shrink-0 box-border bg-white text-slate-900 p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 rounded-sm print:shadow-none print:border-none print:p-10 print:m-0 print:min-h-0 mx-auto"
