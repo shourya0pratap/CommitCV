@@ -11,7 +11,7 @@ import {
   GripVertical,
 } from "lucide-react";
 
-const GithubIcon = ({ size = 24, className = "" }) => (
+const GithubIcon = ({ size = 24 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -22,7 +22,6 @@ const GithubIcon = ({ size = 24, className = "" }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={className}
   >
     <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
     <path d="M9 18c-4.51 2-5-2-7-2" />
@@ -58,131 +57,219 @@ export default function Editor() {
       [section]: { ...prev[section], [field]: value },
     }));
   };
-  const updateExperience = (id, field, value) => {
-    setResumeData((prev) => ({
-      ...prev,
-      experiences: prev.experiences.map((exp) =>
-        exp.id === id ? { ...exp, [field]: value } : exp,
-      ),
-    }));
-  };
-  const addExperience = () => {
-    setResumeData((prev) => ({
-      ...prev,
-      experiences: [
-        ...prev.experiences,
-        { id: Date.now(), company: "", role: "", details: "" },
-      ],
-    }));
-  };
-  const removeExperience = (id) => {
-    setResumeData((prev) => ({
-      ...prev,
-      experiences: prev.experiences.filter((exp) => exp.id !== id),
-    }));
-  };
   const handleGithubFetch = (e) => {
     e.preventDefault();
     fetchGithubProfile(githubUser);
   };
 
+  // Generic Array Handlers
+  const updateArrayItem = (arrayName, id, field, value) => {
+    setResumeData((prev) => ({
+      ...prev,
+      [arrayName]: prev[arrayName].map((item) =>
+        item.id === id ? { ...item, [field]: value } : item,
+      ),
+    }));
+  };
+  const addArrayItem = (arrayName, emptyTemplate) => {
+    setResumeData((prev) => ({
+      ...prev,
+      [arrayName]: [...prev[arrayName], { id: Date.now(), ...emptyTemplate }],
+    }));
+  };
+  const removeArrayItem = (arrayName, id) => {
+    setResumeData((prev) => ({
+      ...prev,
+      [arrayName]: prev[arrayName].filter((item) => item.id !== id),
+    }));
+  };
+
+  // Sleek Dark Mode Class Variables
   const inputStyles =
-    "w-full p-2.5 border rounded-lg dark:bg-gray-900 dark:border-gray-700 dark:text-white mb-3 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow";
+    "w-full p-3.5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 mb-3 focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-500 outline-none transition-all font-medium";
+  const bentoCard =
+    "bg-white dark:bg-[#141414] p-6 rounded-3xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors";
+  const sectionTitle =
+    "text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2";
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl h-[85vh] overflow-y-auto print:hidden space-y-8 border border-gray-100 dark:border-gray-700 custom-scrollbar">
+    <div className="h-[85vh] overflow-y-auto pr-2 pb-10 custom-scrollbar space-y-4 print:hidden">
       {/* GitHub Auto-fill */}
-      <div className="bg-emerald-50 dark:bg-emerald-500/10 p-5 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
-        <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-3 uppercase flex items-center gap-2">
-          <GithubIcon size={18} /> Auto-fill from GitHub
+      <div
+        className={`w-full ${bentoCard} !bg-slate-900 dark:!bg-[#1A1A1A] !border-transparent text-white`}
+      >
+        <h3 className="text-sm font-bold text-slate-300 dark:text-slate-400 mb-3 uppercase tracking-wider flex items-center gap-2">
+          <GithubIcon size={18} /> Sync with GitHub
         </h3>
         <form onSubmit={handleGithubFetch} className="flex gap-2">
           <input
-            className="flex-1 p-2.5 rounded-lg border border-emerald-200 dark:border-emerald-500/30 dark:bg-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500"
-            placeholder="GitHub Username..."
+            className="flex-1 p-3.5 rounded-2xl bg-slate-800 dark:bg-black/50 border-none text-white placeholder-slate-500 outline-none focus:ring-2 focus:ring-white"
+            placeholder="Enter username..."
             value={githubUser}
             onChange={(e) => setGithubUser(e.target.value)}
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+            className="px-6 py-3.5 bg-white text-slate-900 rounded-2xl font-bold hover:bg-gray-100 disabled:opacity-50 transition-colors"
           >
-            {isLoading ? "Fetching..." : "Fetch"}
+            {isLoading ? "Syncing..." : "Sync"}
           </button>
         </form>
         {error && (
-          <p className="text-red-500 text-sm mt-2 font-medium">{error}</p>
+          <p className="text-red-400 text-sm mt-2 font-medium">{error}</p>
         )}
       </div>
 
-      {/* Personal Details */}
-      <section>
-        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2 border-b dark:border-gray-700 pb-2">
-          <User size={22} className="text-emerald-500" /> Personal Details
-        </h3>
-        <input
-          className={inputStyles}
-          value={resumeData.personal.name}
-          onChange={(e) => updateField("personal", "name", e.target.value)}
-          placeholder="Full Name"
-        />
-        <input
-          className={inputStyles}
-          value={resumeData.personal.role}
-          onChange={(e) => updateField("personal", "role", e.target.value)}
-          placeholder="Role/Title"
-        />
-        <input
-          className={inputStyles}
-          value={resumeData.personal.email}
-          onChange={(e) => updateField("personal", "email", e.target.value)}
-          placeholder="Email"
-        />
-      </section>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Personal Details */}
+        <div className={`col-span-1 md:col-span-2 ${bentoCard}`}>
+          <h3 className={sectionTitle}>
+            <User size={20} className="text-slate-400 dark:text-slate-500" />{" "}
+            Personal
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input
+              className={inputStyles}
+              value={resumeData.personal.name}
+              onChange={(e) => updateField("personal", "name", e.target.value)}
+              placeholder="Full Name"
+            />
+            <input
+              className={inputStyles}
+              value={resumeData.personal.role}
+              onChange={(e) => updateField("personal", "role", e.target.value)}
+              placeholder="Role/Title"
+            />
+            <input
+              className={inputStyles}
+              value={resumeData.personal.email}
+              onChange={(e) => updateField("personal", "email", e.target.value)}
+              placeholder="Email"
+            />
+          </div>
+        </div>
+      </div>
 
-      {/* Education */}
-      <section>
-        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2 border-b dark:border-gray-700 pb-2">
-          <GraduationCap size={22} className="text-emerald-500" /> Education
-        </h3>
-        <input
-          className={inputStyles}
-          value={resumeData.education.institution}
-          onChange={(e) =>
-            updateField("education", "institution", e.target.value)
-          }
-          placeholder="Institution (e.g., KR Mangalam University)"
-        />
-        <input
-          className={inputStyles}
-          value={resumeData.education.degree}
-          onChange={(e) => updateField("education", "degree", e.target.value)}
-          placeholder="Degree"
-        />
-        <input
-          className={inputStyles}
-          value={resumeData.education.score}
-          onChange={(e) => updateField("education", "score", e.target.value)}
-          placeholder="Score"
-        />
-      </section>
+      {/* Educations */}
+      <div className={bentoCard}>
+        <div className="flex justify-between items-center mb-5">
+          <h3 className={sectionTitle} style={{ marginBottom: 0 }}>
+            <GraduationCap
+              size={20}
+              className="text-slate-400 dark:text-slate-500"
+            />{" "}
+            Education
+          </h3>
+          <button
+            onClick={() =>
+              addArrayItem("educations", {
+                institution: "",
+                degree: "",
+                duration: "",
+                details: "",
+              })
+            }
+            className="text-sm flex items-center gap-1 bg-[#F7F7F9] dark:bg-black/40 text-slate-900 dark:text-white px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors font-bold border border-gray-100 dark:border-slate-800"
+          >
+            <Plus size={16} /> Add Education
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {resumeData.educations.map((edu, index) => (
+            <div
+              key={edu.id}
+              className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
+            >
+              {resumeData.educations.length > 1 && (
+                <button
+                  onClick={() => removeArrayItem("educations", edu.id)}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              )}
+              <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-wider">
+                Education {index + 1}
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <input
+                  className={`${inputStyles} !mb-0`}
+                  value={edu.institution}
+                  onChange={(e) =>
+                    updateArrayItem(
+                      "educations",
+                      edu.id,
+                      "institution",
+                      e.target.value,
+                    )
+                  }
+                  placeholder="Institution (e.g., Harvard)"
+                />
+                <input
+                  className={`${inputStyles} !mb-0`}
+                  value={edu.degree}
+                  onChange={(e) =>
+                    updateArrayItem(
+                      "educations",
+                      edu.id,
+                      "degree",
+                      e.target.value,
+                    )
+                  }
+                  placeholder="Degree/Course"
+                />
+              </div>
+              <input
+                className={inputStyles}
+                value={edu.duration}
+                onChange={(e) =>
+                  updateArrayItem(
+                    "educations",
+                    edu.id,
+                    "duration",
+                    e.target.value,
+                  )
+                }
+                placeholder="Duration (e.g., 2024 - 2028)"
+              />
+              <textarea
+                className={inputStyles}
+                value={edu.details}
+                onChange={(e) =>
+                  updateArrayItem(
+                    "educations",
+                    edu.id,
+                    "details",
+                    e.target.value,
+                  )
+                }
+                placeholder="Skills learned, coursework, or GPA..."
+                rows="2"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Skills */}
-      <section>
-        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2 border-b dark:border-gray-700 pb-2">
-          <Wrench size={22} className="text-emerald-500" /> Skills
+      <div className={bentoCard}>
+        <h3 className={sectionTitle}>
+          <Wrench size={20} className="text-slate-400 dark:text-slate-500" />{" "}
+          Skills
         </h3>
-        <form onSubmit={addSkill} className="flex gap-2 mb-4">
+        <form onSubmit={addSkill} className="flex gap-2 mb-6">
           <input
-            className="flex-1 p-2.5 border rounded-lg dark:bg-gray-900 dark:border-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500"
+            className={inputStyles}
+            style={{ marginBottom: 0 }}
             value={newSkill}
             onChange={(e) => setNewSkill(e.target.value)}
-            placeholder="Add a skill..."
+            placeholder="Add a new skill..."
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-gray-800 dark:bg-gray-700 text-white rounded-lg font-bold hover:bg-gray-900 dark:hover:bg-gray-600 transition-colors"
+            className="px-5 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold hover:bg-slate-800 dark:hover:bg-gray-200 transition-colors"
           >
             <Plus size={20} />
           </button>
@@ -191,39 +278,49 @@ export default function Editor() {
           axis="y"
           values={resumeData.skills}
           onReorder={handleReorder}
-          className="space-y-2"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"
         >
           {resumeData.skills.map((skill) => (
             <Reorder.Item
               key={skill}
               value={skill}
-              className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded-lg cursor-grab active:cursor-grabbing hover:border-emerald-500 transition-colors"
+              className="flex justify-between items-center p-3 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-xl cursor-grab active:cursor-grabbing hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
             >
-              <span className="dark:text-white font-medium flex items-center gap-3">
-                <GripVertical size={16} className="text-gray-400" /> {skill}
+              <span className="text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-2 text-sm">
+                <GripVertical size={14} className="text-slate-400" /> {skill}
               </span>
               <button
                 onClick={() => removeSkill(skill)}
-                className="text-gray-400 hover:text-red-500 transition-colors"
+                className="text-slate-400 hover:text-red-500 transition-colors"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </Reorder.Item>
           ))}
         </Reorder.Group>
-      </section>
+      </div>
 
       {/* Experiences */}
-      <section>
-        <div className="flex justify-between items-center mb-4 border-b dark:border-gray-700 pb-2">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-            <Briefcase size={22} className="text-emerald-500" /> Experience
+      <div className={bentoCard}>
+        <div className="flex justify-between items-center mb-5">
+          <h3 className={sectionTitle} style={{ marginBottom: 0 }}>
+            <Briefcase
+              size={20}
+              className="text-slate-400 dark:text-slate-500"
+            />{" "}
+            Experience
           </h3>
           <button
-            onClick={addExperience}
-            className="text-sm flex items-center gap-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors font-semibold"
+            onClick={() =>
+              addArrayItem("experiences", {
+                company: "",
+                role: "",
+                details: "",
+              })
+            }
+            className="text-sm flex items-center gap-1 bg-[#F7F7F9] dark:bg-black/40 text-slate-900 dark:text-white px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors font-bold border border-gray-100 dark:border-slate-800"
           >
-            <Plus size={16} /> Add
+            <Plus size={16} /> Add Role
           </button>
         </div>
 
@@ -231,48 +328,65 @@ export default function Editor() {
           {resumeData.experiences.map((exp, index) => (
             <div
               key={exp.id}
-              className="p-5 border dark:border-gray-700 rounded-xl relative bg-gray-50 dark:bg-gray-900/50 group"
+              className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
             >
               {resumeData.experiences.length > 1 && (
                 <button
-                  onClick={() => removeExperience(exp.id)}
-                  className="absolute top-3 right-3 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => removeArrayItem("experiences", exp.id)}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
                 >
                   <X size={20} />
                 </button>
               )}
-              <h4 className="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">
-                Experience {index + 1}
+              <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-wider">
+                Role {index + 1}
               </h4>
-              <input
-                className={inputStyles}
-                value={exp.company}
-                onChange={(e) =>
-                  updateExperience(exp.id, "company", e.target.value)
-                }
-                placeholder="Company"
-              />
-              <input
-                className={inputStyles}
-                value={exp.role}
-                onChange={(e) =>
-                  updateExperience(exp.id, "role", e.target.value)
-                }
-                placeholder="Role"
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <input
+                  className={`${inputStyles} !mb-0`}
+                  value={exp.company}
+                  onChange={(e) =>
+                    updateArrayItem(
+                      "experiences",
+                      exp.id,
+                      "company",
+                      e.target.value,
+                    )
+                  }
+                  placeholder="Company"
+                />
+                <input
+                  className={`${inputStyles} !mb-0`}
+                  value={exp.role}
+                  onChange={(e) =>
+                    updateArrayItem(
+                      "experiences",
+                      exp.id,
+                      "role",
+                      e.target.value,
+                    )
+                  }
+                  placeholder="Job Title"
+                />
+              </div>
               <textarea
                 className={inputStyles}
                 value={exp.details}
                 onChange={(e) =>
-                  updateExperience(exp.id, "details", e.target.value)
+                  updateArrayItem(
+                    "experiences",
+                    exp.id,
+                    "details",
+                    e.target.value,
+                  )
                 }
-                placeholder="Details..."
+                placeholder="Describe your achievements..."
                 rows="3"
               />
             </div>
           ))}
         </div>
-      </section>
+      </div>
     </div>
   );
 }

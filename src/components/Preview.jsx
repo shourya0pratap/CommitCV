@@ -11,14 +11,14 @@ const Preview = React.memo(() => {
   const sectionComponents = {
     skills: (
       <div key="skills" className="mb-6 break-inside-avoid">
-        <h2 className="text-lg font-bold uppercase tracking-wider mb-2 text-gray-800 border-b border-gray-200 pb-1">
+        <h2 className="text-[13px] font-bold uppercase tracking-widest mb-3 text-slate-400 border-b border-slate-200 pb-2">
           Technical Skills
         </h2>
         <div className="flex flex-wrap gap-2">
           {resumeData.skills.map((skill, index) => (
             <span
               key={index}
-              className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium border border-gray-200"
+              className="px-2.5 py-1 bg-slate-50 text-slate-700 rounded-md text-[13px] font-semibold border border-slate-200"
             >
               {skill}
             </span>
@@ -26,39 +26,54 @@ const Preview = React.memo(() => {
         </div>
       </div>
     ),
-    education: (
-      <div key="education" className="mb-6 break-inside-avoid">
-        <h2 className="text-lg font-bold uppercase tracking-wider mb-2 text-gray-800 border-b border-gray-200 pb-1">
+    educations: (
+      <div key="educations" className="mb-6">
+        <h2 className="text-[13px] font-bold uppercase tracking-widest mb-3 text-slate-400 border-b border-slate-200 pb-2">
           Education
         </h2>
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-semibold text-lg text-gray-900">
-              {resumeData.education.degree}
-            </h3>
-            <p className="text-gray-600">{resumeData.education.institution}</p>
-          </div>
-          <span className="font-bold text-emerald-600 whitespace-nowrap ml-4">
-            {resumeData.education.score}
-          </span>
+        <div className="space-y-4">
+          {resumeData.educations.map((edu) => (
+            <div key={edu.id} className="break-inside-avoid">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-bold text-[15px] text-slate-900">
+                    {edu.degree}
+                  </h3>
+                  <p className="text-slate-600 text-[14px] mt-0.5 font-medium">
+                    {edu.institution}
+                  </p>
+                </div>
+                {edu.duration && (
+                  <span className="font-bold text-slate-900 text-[13px] whitespace-nowrap ml-4 bg-slate-100 px-2 py-1 rounded">
+                    {edu.duration}
+                  </span>
+                )}
+              </div>
+              {edu.details && (
+                <p className="text-slate-700 mt-2 text-[14px] leading-relaxed whitespace-pre-wrap">
+                  {edu.details}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     ),
     experiences: (
       <div key="experiences" className="mb-6">
-        <h2 className="text-lg font-bold uppercase tracking-wider mb-3 text-gray-800 border-b border-gray-200 pb-1">
+        <h2 className="text-[13px] font-bold uppercase tracking-widest mb-3 text-slate-400 border-b border-slate-200 pb-2">
           Experience
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-5">
           {resumeData.experiences.map((exp) => (
             <div key={exp.id} className="break-inside-avoid">
-              <h3 className="font-semibold text-lg text-gray-900">
+              <h3 className="font-bold text-[15px] text-slate-900">
                 {exp.role}{" "}
-                <span className="text-gray-500 font-normal">
+                <span className="text-slate-500 font-medium">
                   at {exp.company}
                 </span>
               </h3>
-              <p className="text-gray-700 mt-1 text-sm leading-relaxed whitespace-pre-wrap">
+              <p className="text-slate-700 mt-1.5 text-[14px] leading-relaxed whitespace-pre-wrap">
                 {exp.details}
               </p>
             </div>
@@ -69,36 +84,30 @@ const Preview = React.memo(() => {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       <button
         onClick={handleDownload}
-        className="mb-6 px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-full shadow-lg hover:shadow-emerald-500/25 transition-all transform hover:-translate-y-1 print:hidden flex items-center gap-2"
+        className="mb-6 px-8 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 print:hidden flex items-center gap-2"
       >
         <Printer size={20} /> Export to PDF
       </button>
-      {/* 
-        CRITICAL FIXES: 
-        1. Added min-w-[210mm] and shrink-0 to prevent flexbox from squishing it.
-        2. Added box-border so padding doesn't increase total width.
-      */}
+
+      {/* Note: The Preview canvas deliberately forces light mode colors so the PDF printout is correct */}
       <motion.div
         layout
-        className="w-[210mm] min-w-[210mm] min-h-[297mm] shrink-0 box-border bg-white text-black p-10 shadow-2xl rounded-sm print:shadow-none print:p-10 print:m-0 print:min-h-0 mx-auto"
+        className="w-[210mm] min-w-[210mm] min-h-[297mm] shrink-0 box-border bg-white text-slate-900 p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 rounded-sm print:shadow-none print:border-none print:p-10 print:m-0 print:min-h-0 mx-auto"
       >
-        {/* Header */}
-        <div className="pb-4 mb-6 text-center break-inside-avoid">
-          <h1 className="text-4xl font-extrabold uppercase tracking-tight text-gray-900">
+        <div className="pb-6 mb-8 text-center break-inside-avoid">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">
             {resumeData.personal.name}
           </h1>
-          <p className="text-xl text-emerald-600 font-medium mt-1">
+          <p className="text-lg text-slate-500 font-semibold mt-2">
             {resumeData.personal.role}
           </p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             {resumeData.personal.email}
           </p>
         </div>
-
-        {/* Dynamically Ordered Sections */}
         {sectionOrder.map((sectionId) => sectionComponents[sectionId])}
       </motion.div>
     </div>
