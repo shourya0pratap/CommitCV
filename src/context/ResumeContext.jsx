@@ -4,27 +4,28 @@ export const ResumeContext = createContext();
 
 const defaultData = {
   personal: {
-    name: "Shourya Pratap Singh",
-    role: "B.Tech CSE Undergraduate",
-    email: "hello@example.com",
+    name: "John Doe",
+    role: "Frontend Developer",
+    email: "john.doe@example.com",
   },
-  skills: ["React.js", "Tailwind CSS", "Framer Motion", "Node.js", "Python"],
+  skills: ["React.js", "JavaScript", "Tailwind CSS", "Git"],
   educations: [
     {
       id: 1,
-      institution: "KR Mangalam University",
-      degree: "B.Tech Computer Science",
-      duration: "2024 - 2028",
+      institution: "University of Technology",
+      degree: "B.S. Computer Science",
+      duration: "2020 - 2024",
       details:
-        "Core focus on Data Structures, Algorithms, and Web Development. Current SGPA: 9.74",
+        "Graduated with Honors. Coursework included Data Structures, Algorithms, and Web Engineering.",
     },
   ],
   experiences: [
     {
       id: 1,
-      company: "Tech Corp",
-      role: "Software Intern",
-      details: "Developed UI components using React and Tailwind CSS.",
+      company: "Tech Innovations Inc.",
+      role: "Junior Web Developer",
+      details:
+        "Built responsive UI components and improved site accessibility.",
     },
   ],
 };
