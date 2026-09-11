@@ -38,7 +38,7 @@ function Home() {
           <FileText size={16} /> CommitCV
         </div>
         <h1 className="text-6xl md:text-7xl font-bold text-slate-900 tracking-tight mb-6">
-          Write less. <br />{" "}
+          Write less. <br />
           <span className="text-slate-400">Interview more.</span>
         </h1>
         <p className="text-lg md:text-xl text-slate-600 mb-8 max-w-2xl mx-auto font-medium">

@@ -7,6 +7,9 @@ const defaultData = {
     name: "John Doe",
     role: "Frontend Developer",
     email: "john.doe@example.com",
+    linkedin: "",
+    github: "",
+    phone: "",
   },
   skills: ["React.js", "JavaScript", "Tailwind CSS", "Git"],
   educations: [
@@ -35,6 +38,13 @@ const defaultData = {
       tech: "React, Tailwind, Framer Motion",
       details:
         "Developed a fully accessible, free-forever resume builder. Implemented live preview, drag-and-drop section reordering, and native PDF export.",
+    },
+  ],
+  achievements: [
+    {
+      id: 1,
+      title: "",
+      details: "",
     },
   ],
 };
@@ -71,16 +81,33 @@ export const ResumeProvider = ({ children }) => {
 
   const [sectionOrder, setSectionOrder] = useState(() => {
     const savedOrder = localStorage.getItem("commitcv-order");
-    let order = savedOrder
-      ? JSON.parse(savedOrder)
-      : ["skills", "educations", "experiences", "projects"];
-    return order.map((item) =>
+    const defaultOrder = [
+      "skills",
+      "educations",
+      "experiences",
+      "projects",
+      "achievements",
+    ];
+
+    let order = savedOrder ? JSON.parse(savedOrder) : defaultOrder;
+
+    // Handle previous migrations
+    order = order.map((item) =>
       item === "experience"
         ? "experiences"
         : item === "education"
           ? "educations"
           : item,
     );
+
+    // MIGRATION: Ensure newly added sections are appended if missing from localStorage
+    defaultOrder.forEach((section) => {
+      if (!order.includes(section)) {
+        order.push(section);
+      }
+    });
+
+    return order;
   });
 
   const [theme, setTheme] = useState(

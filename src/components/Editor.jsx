@@ -10,6 +10,7 @@ import {
   X,
   GripVertical,
   Code,
+  Trophy,
 } from "lucide-react";
 
 const GithubIcon = ({ size = 24 }) => (
@@ -40,7 +41,7 @@ export default function Editor() {
   const addSkill = (e) => {
     e.preventDefault();
     const trimmed = newSkill.trim();
-    if (!trimmed || resumeData.skills.includes(trimmed)) return; // Prevents duplicate keys crashing the drag
+    if (!trimmed || resumeData.skills.includes(trimmed)) return;
     setResumeData((prev) => ({ ...prev, skills: [...prev.skills, trimmed] }));
     setNewSkill("");
   };
@@ -73,7 +74,10 @@ export default function Editor() {
   const addArrayItem = (arrayName, emptyTemplate) => {
     setResumeData((prev) => ({
       ...prev,
-      [arrayName]: [...prev[arrayName], { id: Date.now(), ...emptyTemplate }],
+      [arrayName]: [
+        ...(prev[arrayName] || []),
+        { id: Date.now(), ...emptyTemplate },
+      ],
     }));
   };
   const removeArrayItem = (arrayName, id) => {
@@ -95,7 +99,7 @@ export default function Editor() {
     <div className="h-[85vh] overflow-y-auto pr-2 pb-10 custom-scrollbar space-y-4 print:hidden">
       {/* GitHub Auto-fill */}
       <div
-        className={`w-full ${bentoCard} !bg-slate-900 dark:!bg-[#1A1A1A] !border-transparent text-white`}
+        className={`w-full ${bentoCard} bg-slate-900! dark:bg-[#1A1A1A]! border-transparent! text-white`}
       >
         <h3 className="text-sm font-bold text-slate-300 dark:text-slate-400 mb-3 uppercase tracking-wider flex items-center gap-2">
           <GithubIcon size={18} /> Sync with GitHub
@@ -130,21 +134,43 @@ export default function Editor() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <input
               className={inputStyles}
-              value={resumeData.personal.name}
+              value={resumeData.personal?.name || ""}
               onChange={(e) => updateField("personal", "name", e.target.value)}
               placeholder="Full Name"
             />
             <input
               className={inputStyles}
-              value={resumeData.personal.role}
+              value={resumeData.personal?.role || ""}
               onChange={(e) => updateField("personal", "role", e.target.value)}
               placeholder="Role/Title"
             />
             <input
               className={inputStyles}
-              value={resumeData.personal.email}
+              value={resumeData.personal?.email || ""}
               onChange={(e) => updateField("personal", "email", e.target.value)}
               placeholder="Email"
+            />
+            <input
+              className={inputStyles}
+              value={resumeData.personal?.linkedin || ""}
+              onChange={(e) =>
+                updateField("personal", "linkedin", e.target.value)
+              }
+              placeholder="LinkedIn"
+            />
+            <input
+              className={inputStyles}
+              value={resumeData.personal?.github || ""}
+              onChange={(e) =>
+                updateField("personal", "github", e.target.value)
+              }
+              placeholder="GitHub"
+            />
+            <input
+              className={inputStyles}
+              value={resumeData.personal?.phone || ""}
+              onChange={(e) => updateField("personal", "phone", e.target.value)}
+              placeholder="Phone"
             />
           </div>
         </div>
@@ -176,7 +202,7 @@ export default function Editor() {
         </div>
 
         <div className="space-y-4">
-          {resumeData.educations.map((edu, index) => (
+          {resumeData.educations?.map((edu, index) => (
             <div
               key={edu.id}
               className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
@@ -194,7 +220,7 @@ export default function Editor() {
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                 <input
-                  className={`${inputStyles} !mb-0`}
+                  className={`${inputStyles} mb-0!`}
                   value={edu.institution}
                   onChange={(e) =>
                     updateArrayItem(
@@ -207,7 +233,7 @@ export default function Editor() {
                   placeholder="Institution (e.g., Harvard)"
                 />
                 <input
-                  className={`${inputStyles} !mb-0`}
+                  className={`${inputStyles} mb-0!`}
                   value={edu.degree}
                   onChange={(e) =>
                     updateArrayItem(
@@ -275,11 +301,11 @@ export default function Editor() {
         </form>
         <Reorder.Group
           axis="y"
-          values={resumeData.skills}
+          values={resumeData.skills || []}
           onReorder={handleReorder}
-          className="flex flex-col gap-2" /* FIX: Changed from grid to flex-col */
+          className="flex flex-col gap-2"
         >
-          {resumeData.skills.map((skill) => (
+          {resumeData.skills?.map((skill) => (
             <Reorder.Item
               key={skill}
               value={skill}
@@ -323,89 +349,8 @@ export default function Editor() {
           </button>
         </div>
 
-        {/* Projects */}
-        <div className={bentoCard}>
-          <div className="flex justify-between items-center mb-5">
-            <h3 className={sectionTitle} style={{ marginBottom: 0 }}>
-              <Code size={20} className="text-slate-400 dark:text-slate-500" />{" "}
-              Projects
-            </h3>
-            <button
-              onClick={() =>
-                addArrayItem("projects", { name: "", tech: "", details: "" })
-              }
-              className="text-sm flex items-center gap-1 bg-[#F7F7F9] dark:bg-black/40 text-slate-900 dark:text-white px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors font-bold border border-gray-100 dark:border-slate-800"
-            >
-              <Plus size={16} /> Add Project
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            {resumeData.projects?.map((proj, index) => (
-              <div
-                key={proj.id}
-                className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
-              >
-                <button
-                  onClick={() => removeArrayItem("projects", proj.id)}
-                  className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
-                >
-                  <X size={20} />
-                </button>
-
-                <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-wider">
-                  Project {index + 1}
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                  <input
-                    className={`${inputStyles} !mb-0`}
-                    value={proj.name}
-                    onChange={(e) =>
-                      updateArrayItem(
-                        "projects",
-                        proj.id,
-                        "name",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="Project Name (e.g., CommitCV)"
-                  />
-                  <input
-                    className={`${inputStyles} !mb-0`}
-                    value={proj.tech}
-                    onChange={(e) =>
-                      updateArrayItem(
-                        "projects",
-                        proj.id,
-                        "tech",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="Tech Stack (e.g., React, Node)"
-                  />
-                </div>
-                <textarea
-                  className={inputStyles}
-                  value={proj.details}
-                  onChange={(e) =>
-                    updateArrayItem(
-                      "projects",
-                      proj.id,
-                      "details",
-                      e.target.value,
-                    )
-                  }
-                  placeholder="Describe the project and your role..."
-                  rows="3"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Experiences */}
         <div className="space-y-4">
-          {resumeData.experiences.map((exp, index) => (
+          {resumeData.experiences?.map((exp, index) => (
             <div
               key={exp.id}
               className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
@@ -422,7 +367,7 @@ export default function Editor() {
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                 <input
-                  className={`${inputStyles} !mb-0`}
+                  className={`${inputStyles} mb-0!`}
                   value={exp.company}
                   onChange={(e) =>
                     updateArrayItem(
@@ -435,7 +380,7 @@ export default function Editor() {
                   placeholder="Company"
                 />
                 <input
-                  className={`${inputStyles} !mb-0`}
+                  className={`${inputStyles} mb-0!`}
                   value={exp.role}
                   onChange={(e) =>
                     updateArrayItem(
@@ -461,6 +406,141 @@ export default function Editor() {
                 }
                 placeholder="Describe your achievements..."
                 rows="3"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Projects */}
+      <div className={bentoCard}>
+        <div className="flex justify-between items-center mb-5">
+          <h3 className={sectionTitle} style={{ marginBottom: 0 }}>
+            <Code size={20} className="text-slate-400 dark:text-slate-500" />{" "}
+            Projects
+          </h3>
+          <button
+            onClick={() =>
+              addArrayItem("projects", { name: "", tech: "", details: "" })
+            }
+            className="text-sm flex items-center gap-1 bg-[#F7F7F9] dark:bg-black/40 text-slate-900 dark:text-white px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors font-bold border border-gray-100 dark:border-slate-800"
+          >
+            <Plus size={16} /> Add Project
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {resumeData.projects?.map((proj, index) => (
+            <div
+              key={proj.id}
+              className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
+            >
+              <button
+                onClick={() => removeArrayItem("projects", proj.id)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-wider">
+                Project {index + 1}
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <input
+                  className={`${inputStyles} mb-0!`}
+                  value={proj.name}
+                  onChange={(e) =>
+                    updateArrayItem("projects", proj.id, "name", e.target.value)
+                  }
+                  placeholder="Project Name (e.g., CommitCV)"
+                />
+                <input
+                  className={`${inputStyles} mb-0!`}
+                  value={proj.tech}
+                  onChange={(e) =>
+                    updateArrayItem("projects", proj.id, "tech", e.target.value)
+                  }
+                  placeholder="Tech Stack (e.g., React, Node)"
+                />
+              </div>
+              <textarea
+                className={inputStyles}
+                value={proj.details}
+                onChange={(e) =>
+                  updateArrayItem(
+                    "projects",
+                    proj.id,
+                    "details",
+                    e.target.value,
+                  )
+                }
+                placeholder="Describe the project and your role..."
+                rows="3"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Achievements */}
+      <div className={bentoCard}>
+        <div className="flex justify-between items-center mb-5">
+          <h3 className={sectionTitle} style={{ marginBottom: 0 }}>
+            <Trophy size={20} className="text-slate-400 dark:text-slate-500" />{" "}
+            Achievements
+          </h3>
+          <button
+            onClick={() =>
+              addArrayItem("achievements", { title: "", details: "" })
+            }
+            className="text-sm flex items-center gap-1 bg-[#F7F7F9] dark:bg-black/40 text-slate-900 dark:text-white px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors font-bold border border-gray-100 dark:border-slate-800"
+          >
+            <Plus size={16} /> Add Achievement
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {resumeData.achievements?.map((ach, index) => (
+            <div
+              key={ach.id}
+              className="p-5 bg-[#F7F7F9] dark:bg-black/40 border border-gray-100 dark:border-slate-800 rounded-2xl relative group transition-colors"
+            >
+              <button
+                onClick={() => removeArrayItem("achievements", ach.id)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-wider">
+                Achievement {index + 1}
+              </h4>
+              <input
+                className={`${inputStyles} mb-3!`}
+                value={ach.title}
+                onChange={(e) =>
+                  updateArrayItem(
+                    "achievements",
+                    ach.id,
+                    "title",
+                    e.target.value,
+                  )
+                }
+                placeholder="Achievement Title (e.g., 1st Rank CTSE 2026)"
+              />
+              <textarea
+                className={inputStyles}
+                value={ach.details}
+                onChange={(e) =>
+                  updateArrayItem(
+                    "achievements",
+                    ach.id,
+                    "details",
+                    e.target.value,
+                  )
+                }
+                placeholder="Briefly describe the achievement or competition..."
+                rows="2"
               />
             </div>
           ))}

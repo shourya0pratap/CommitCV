@@ -7,7 +7,6 @@
 
 @variant dark (&:where(.dark, .dark *));
 
-
 @media print {
   ::-webkit-scrollbar {
     display: none !important;

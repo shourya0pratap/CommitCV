@@ -10,7 +10,7 @@ export default function Builder() {
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-[#F7F7F9] dark:bg-[#0A0A0A] print:bg-white transition-colors duration-300">
-      <nav className="flex justify-between items-center mb-8 print:hidden max-w-[1600px] mx-auto">
+      <nav className="flex justify-between items-center mb-8 print:hidden max-w-400 mx-auto">
         <Link
           to="/"
           className="text-2xl font-extrabold tracking-tighter text-slate-900 dark:text-white flex items-center gap-2"
@@ -34,7 +34,7 @@ export default function Builder() {
         </div>
       </nav>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start max-w-[1600px] mx-auto">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start max-w-400 mx-auto">
         <section className="print:hidden w-full">
           <Editor />
         </section>
